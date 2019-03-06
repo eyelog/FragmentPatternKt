@@ -12,27 +12,40 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    var isOneFragment = true;
+    val manager = supportFragmentManager
 
-
-    @SuppressLint("ShowToast", "ResourceType")
+    @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        button.setOnClickListener { v -> Toast.makeText(this, "Tap", Toast.LENGTH_SHORT) }
+        changeFragmentOne()
 
-        var fragment = MainFragment()
-
-        supportFragmentManager.inTransaction {
-            add(R.id.frame, fragment)
-            add(R.id.frame2, fragment)
+        button.setOnClickListener {
+            if (isOneFragment){
+                changeFragmentTwo()
+            }else{
+                changeFragmentOne()
+            }
         }
-
     }
 
-    inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> Unit) {
-        val fragmentTransaction = beginTransaction()
-        fragmentTransaction.func()
-        fragmentTransaction.commit()
+    fun changeFragmentOne(){
+        val transaction = manager.beginTransaction()
+        val  fragment = FragmentOne()
+        transaction.replace(R.id.frame, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+        isOneFragment = true
+    }
+
+    fun changeFragmentTwo(){
+        val transaction = manager.beginTransaction()
+        val  fragment = FragmentTwo()
+        transaction.replace(R.id.frame, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+        isOneFragment = false
     }
 }
